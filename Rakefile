@@ -7,6 +7,6 @@ require "syntax_tree/rake_tasks"
 
 RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new
-SyntaxTree::Rake::CheckTask.new()
+SyntaxTree::Rake::CheckTask.new
 
 task default: [:spec, :rubocop, :"stree:check"]
