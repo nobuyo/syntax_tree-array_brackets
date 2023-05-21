@@ -1,0 +1,4 @@
+{
+  "rubyLsp.formatter": "syntax_tree",
+  "editor.formatOnSave": true
+}
