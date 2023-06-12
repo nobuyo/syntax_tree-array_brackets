@@ -138,4 +138,38 @@ RSpec.describe "formatting" do
       expect(formatted).to eq source
     end
   end
+
+  context "empty array literals" do
+    it "formats `%w[]` to empty bracket array" do
+      source = "%w[]\n"
+      expected = "[]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats `%w()` to empty bracket array" do
+      source = "%w()\n"
+      expected = "[]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats `%i[]` to empty bracket array" do
+      source = "%i[]\n"
+      expected = "[]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats `%i()` to empty bracket array" do
+      source = "%i()\n"
+      expected = "[]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+  end
 end

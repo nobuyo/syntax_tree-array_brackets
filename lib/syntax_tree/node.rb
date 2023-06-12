@@ -37,17 +37,19 @@ module SyntaxTree
       q.group do
         q.text(opening)
 
-        loc = elements.first.location.to(elements.last.location)
-        str_contents =
-          elements.map do |element|
-            StringContent.new(parts: [element], location: nil)
-          end
-        contents = Args.new(parts: str_contents, location: loc)
+        unless elements.empty?
+          loc = elements.first.location.to(elements.last.location)
+          str_contents =
+            elements.map do |element|
+              StringContent.new(parts: [element], location: nil)
+            end
+          contents = Args.new(parts: str_contents, location: loc)
 
-        q.indent do
-          q.breakable_empty
-          q.format(contents)
-          q.if_break { q.text(",") } if q.trailing_comma?
+          q.indent do
+            q.breakable_empty
+            q.format(contents)
+            q.if_break { q.text(",") } if q.trailing_comma?
+          end
         end
 
         q.breakable_empty
@@ -63,17 +65,19 @@ module SyntaxTree
       q.group do
         q.text(opening)
 
-        loc = elements.first.location.to(elements.last.location)
-        str_contents =
-          elements.map do |element|
-            SymbolLiteral.new(value: element, location: nil)
-          end
-        contents = Args.new(parts: str_contents, location: loc)
+        unless elements.empty?
+          loc = elements.first.location.to(elements.last.location)
+          str_contents =
+            elements.map do |element|
+              SymbolLiteral.new(value: element, location: nil)
+            end
+          contents = Args.new(parts: str_contents, location: loc)
 
-        q.indent do
-          q.breakable_empty
-          q.format(contents)
-          q.if_break { q.text(",") } if q.trailing_comma?
+          q.indent do
+            q.breakable_empty
+            q.format(contents)
+            q.if_break { q.text(",") } if q.trailing_comma?
+          end
         end
 
         q.breakable_empty
