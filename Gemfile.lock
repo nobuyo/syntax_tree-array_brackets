@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    syntax_tree-array_brackets (0.1.1)
+    syntax_tree-array_brackets (0.1.2)
       syntax_tree (>= 2.0.1)
 
 GEM
