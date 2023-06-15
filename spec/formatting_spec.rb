@@ -121,6 +121,99 @@ RSpec.describe "formatting" do
 
       expect(formatted).to eq expected
     end
+
+    it "formats an array which has colon-included element correctly" do
+      source = "%i[foo bar:baz]\n"
+      expected = "[:foo, :\"bar:baz\"]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an array which has colon-included element with single quotes plugin" do
+      source = "%i[foo bar:baz]\n"
+      expected = "[:foo, :'bar:baz']\n"
+      options = SyntaxTree::Formatter::Options.new(quote: "'")
+      formatter = SyntaxTree::Formatter.new(source, [], options: options)
+      SyntaxTree.parse(source).format(formatter)
+      formatter.flush
+      formatted = formatter.output.join
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an array which has special characters as elements correctly" do
+      source = "%i[$ % ! ? # : ; / ' \" \\\\ * - + , . < > ^ & @ ( )]"
+      expected = <<~RUBY
+      [
+        :"$",
+        :%,
+        :!,
+        :"?",
+        :"#",
+        :":",
+        :";",
+        :/,
+        :"'",
+        :"\\\"",
+        :"\\\\",
+        :*,
+        :-,
+        :+,
+        :",",
+        :".",
+        :<,
+        :>,
+        :^,
+        :&,
+        :"@",
+        :"(",
+        :")"
+      ]
+      RUBY
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an array which has special characters as elements with single_quotes plugin" do
+      source = "%i[$ % ! ? # : ; / ' \" \\\\ * - + , . < > ^ & @ ( )]"
+      expected = <<~RUBY
+      [
+        :'$',
+        :%,
+        :!,
+        :'?',
+        :'#',
+        :':',
+        :';',
+        :/,
+        :'\\\'',
+        :'"',
+        :'\\\\',
+        :*,
+        :-,
+        :+,
+        :',',
+        :'.',
+        :<,
+        :>,
+        :^,
+        :&,
+        :'@',
+        :'(',
+        :')'
+      ]
+      RUBY
+
+      options = SyntaxTree::Formatter::Options.new(quote: "'")
+      formatter = SyntaxTree::Formatter.new(source, [], options: options)
+      SyntaxTree.parse(source).format(formatter)
+      formatter.flush
+      formatted = formatter.output.join
+
+      expect(formatted).to eq expected
+    end
   end
 
   context "symbols" do
