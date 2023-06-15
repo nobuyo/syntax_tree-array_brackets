@@ -67,11 +67,8 @@ module SyntaxTree
 
         unless elements.empty?
           loc = elements.first.location.to(elements.last.location)
-          str_contents =
-            elements.map do |element|
-              SymbolLiteral.new(value: element, location: nil)
-            end
-          contents = Args.new(parts: str_contents, location: loc)
+          literals = convert_to_literals(q, elements)
+          contents = Args.new(parts: literals, location: loc)
 
           q.indent do
             q.breakable_empty
@@ -83,6 +80,31 @@ module SyntaxTree
         q.breakable_empty
         q.text(closing)
       end
+    end
+
+    private
+
+    def convert_to_literals(q, elements)
+      elements.map do |element|
+        value =
+          if element.value.intern.inspect.include?("\"") # consider symbols like :"foo:bar", :"?"
+            value = get_intern_representation(q, element.value)
+            element.copy(value: value, location: element.location)
+          else
+            element
+          end
+
+        SymbolLiteral.new(value: value, location: nil)
+      end
+    end
+
+    def get_intern_representation(q, value)
+      if value == q.quote
+        return "\"\\\"\"" if q.quote == "\""
+        return "\'\\\'\'" if q.quote == "'" # rubocop:disable Style/RedundantStringEscape
+      end
+
+      "#{q.quote}#{value}#{q.quote}"
     end
   end
 end
