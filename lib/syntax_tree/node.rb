@@ -41,7 +41,12 @@ module SyntaxTree
           loc = elements.first.location.to(elements.last.location)
           str_contents =
             elements.map do |element|
-              StringContent.new(parts: [element], location: nil)
+              copy =
+                element.copy(
+                  value: element.value.gsub(/([^\\])\\ /, "\\1 "),
+                  location: element.location
+                )
+              StringContent.new(parts: [copy], location: nil)
             end
           contents = Args.new(parts: str_contents, location: loc)
 
@@ -88,13 +93,17 @@ module SyntaxTree
       elements.map do |element|
         value =
           if element.value.intern.inspect.include?("\"") # consider symbols like :"foo:bar", :"?"
-            value = get_intern_representation(q, element.value)
-            element.copy(value: value, location: element.location)
+            get_intern_representation(q, element.value)
           else
-            element
+            element.value
           end
+        copy =
+          element.copy(
+            value: value.gsub(/([^\\])\\ /, "\\1 "),
+            location: element.location
+          )
 
-        SymbolLiteral.new(value: value, location: nil)
+        SymbolLiteral.new(value: copy, location: nil)
       end
     end
 
