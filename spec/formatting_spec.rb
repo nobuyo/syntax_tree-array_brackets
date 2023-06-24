@@ -265,4 +265,46 @@ RSpec.describe "formatting" do
       expect(formatted).to eq expected
     end
   end
+
+  context "array element has escaped space" do
+    it "formats the string as single element" do
+      source = "%w[foo\\ bar]\n"
+      expected = "[\"foo bar\"]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an qwords contains a element which is end with backslash correctly" do
+      source = "%w[foo\\\\ bar]\n"
+      expected = "[\"foo\\\\\", \"bar\"]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats the symbol as single element" do
+      source = "%i[foo\\ bar]\n"
+      expected = "[:\"foo bar\"]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an qsymbols contains a element which is end with backslash correctly" do
+      source = "%i[foo\\\\ bar]\n"
+      expected = "[:\"foo\\\\\", :bar]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+
+    it "formats an qsymbols contains a element which is end with backslash correctly" do
+      source = "%i[foo\\\\ bar]\n"
+      expected = "[:\"foo\\\\\", :bar]\n"
+      formatted = SyntaxTree::Formatter.format(source, SyntaxTree.parse(source))
+
+      expect(formatted).to eq expected
+    end
+  end
 end
